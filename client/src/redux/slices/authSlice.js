@@ -1,6 +1,6 @@
 // client/src/redux/slices/authSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../../axiosConfig"; // usamos la instancia con token
 
 // Obtén token inicial de localStorage (si existe)
 const initialToken = localStorage.getItem("token") || null;
@@ -10,10 +10,7 @@ export const register = createAsyncThunk(
   "auth/register",
   async ({ email, password }, thunkAPI) => {
     try {
-      const res = await axios.post("/api/auth/register", {
-        email,
-        password,
-      });
+      const res = await api.post("/auth/register", { email, password });
       return res.data.message;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data?.error || err.message);
@@ -26,11 +23,7 @@ export const login = createAsyncThunk(
   "auth/login",
   async ({ email, password }, thunkAPI) => {
     try {
-      const res = await axios.post("/api/auth/login", {
-        email,
-        password,
-      });
-      // Guardamos el token en localStorage
+      const res = await api.post("/auth/login", { email, password });
       localStorage.setItem("token", res.data.token);
       return res.data; // { token, user }
     } catch (err) {
@@ -56,8 +49,8 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // REGISTER
     builder
+      // REGISTER
       .addCase(register.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -70,10 +63,8 @@ const authSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
-
-    // LOGIN
-    builder
+      })
+      // LOGIN
       .addCase(login.pending, (state) => {
         state.loading = true;
         state.error = null;
