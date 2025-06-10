@@ -1,7 +1,7 @@
 // client/src/pages/SinglePost.js
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "../axiosConfig"; // ✅ CAMBIO AQUÍ
 
 const SinglePost = () => {
   const { id } = useParams();
@@ -11,7 +11,7 @@ const SinglePost = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await axios.get(`/api/posts/${id}`);
+        const res = await axios.get(`/posts/${id}`);
         setPost(res.data);
       } catch (err) {
         setError(err.response?.data?.error || "Error al cargar el post");

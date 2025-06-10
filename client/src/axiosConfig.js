@@ -1,7 +1,9 @@
+// client/src/axiosConfig.js
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://alison-post-refactored.onrender.com/api",
+  withCredentials: true,
 });
 
 instance.interceptors.request.use((config) => {
