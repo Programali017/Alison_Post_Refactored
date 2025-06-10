@@ -1,14 +1,14 @@
 // client/src/axiosConfig.js
 import axios from "axios";
 
-const baseURL = import.meta.env.VITE_API_URL;
+const baseURL = process.env.REACT_APP_API_URL;
 
 if (!baseURL) {
-  console.warn("⚠️ VITE_API_URL no está definida. Revisa las variables de entorno en Netlify o .env");
+  console.error("❌ REACT_APP_API_URL no está definida. Revisa Netlify.");
 }
 
 const instance = axios.create({
-  baseURL: baseURL || "http://localhost:10000/api", // fallback local
+  baseURL: baseURL,
   withCredentials: true,
 });
 
