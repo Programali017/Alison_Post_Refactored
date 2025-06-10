@@ -7,7 +7,7 @@ if (!baseURL) {
   console.error("❌ REACT_APP_API_URL no está definida. Revisa Netlify.");
 }
 
-const api = axios.create({
+const instance = axios.create({
   baseURL: baseURL,
   withCredentials: true,
 });
