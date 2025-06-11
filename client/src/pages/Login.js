@@ -15,9 +15,13 @@ const Login = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(login(form));
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  const result = await dispatch(register(form));
+
+  if (register.fulfilled.match(result)) {
+      navigate("/login");
+    }
   };
 
   useEffect(() => {
