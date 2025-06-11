@@ -1,8 +1,7 @@
 // client/src/redux/slices/authSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../../axiosConfig"; // usamos la instancia con token
+import api from "../../axiosConfig";
 
-// Obtén token inicial de localStorage (si existe)
 const initialToken = localStorage.getItem("token") || null;
 
 // REGISTER
@@ -47,6 +46,11 @@ const authSlice = createSlice({
       state.token = null;
       localStorage.removeItem("token");
     },
+    // ✅ Nuevo reducer para limpiar estado de registro
+    clearRegisterStatus: (state) => {
+      state.registerSuccess = null;
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -81,5 +85,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+// ✅ Exporta el nuevo action creator
+export const { logout, clearRegisterStatus } = authSlice.actions;
 export default authSlice.reducer;
