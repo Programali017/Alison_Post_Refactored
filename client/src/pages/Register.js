@@ -16,13 +16,15 @@ const Register = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const result = await dispatch(register(form));
-    if (register.fulfilled.match(result)) {
-      // Auto login después del registro
-      dispatch(login(form));
-    }
-  };
+  e.preventDefault();
+  const result = await dispatch(register(form));
+
+  // Si el registro fue exitoso, redirige al login
+  if (register.fulfilled.match(result)) {
+    navigate("/login");
+  }
+};
+
 
   useEffect(() => {
     // Si hay registro exitoso, se redirige desde el login.js
