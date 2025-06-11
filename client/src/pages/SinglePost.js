@@ -1,7 +1,7 @@
 // client/src/pages/SinglePost.js
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "../axiosConfig"; // ✅ CAMBIO AQUÍ
+import axios from "../axiosConfig"; 
 
 const SinglePost = () => {
   const { id } = useParams();

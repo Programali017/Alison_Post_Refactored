@@ -1,33 +1,36 @@
 // client/src/pages/Register.js
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { register } from "../redux/slices/authSlice";
+import { register, login } from "../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { loading, error, registerSuccess } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(register(form));
+    const result = await dispatch(register(form));
+    if (register.fulfilled.match(result)) {
+      // Auto login después del registro
+      dispatch(login(form));
+    }
   };
 
   useEffect(() => {
-    if (registerSuccess) {
-      navigate("/login");
-    }
-  }, [registerSuccess, navigate]);
+    // Si hay registro exitoso, se redirige desde el login.js
+  }, []);
 
   return (
     <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-vinoTinto">Registro</h2>
+      <h2 className="text-2xl font-bold mb-4 text-vinoTinto">Crear Cuenta</h2>
       {error && <p className="text-red-500 mb-2">{error}</p>}
       {loading && <p className="mb-2">Registrando...</p>}
 

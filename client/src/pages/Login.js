@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/slices/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // EXTRAEMOS `user` además de `token`
   const { token, user, loading, error } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
@@ -21,11 +21,11 @@ const Login = () => {
   };
 
   useEffect(() => {
-    // Redirigimos sólo si YA tenemos token VÁLIDO Y `user` cargado
     if (token && user) {
-      navigate("/");
+      const from = location.state?.from || "/";
+      navigate(from);
     }
-  }, [token, user, navigate]);
+  }, [token, user, navigate, location.state]);
 
   return (
     <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded shadow-lg">

@@ -33,15 +33,15 @@ const Home = () => {
   }, [dispatch]);
 
   const handleDelete = async (postId) => {
-    if (!token) return;
-    try {
-      await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      dispatch(fetchPosts());
-    } catch (err) {
-      alert("No se pudo eliminar el post.");
-    }
+  if (!token) return;
+  try {
+    await axios.delete(`/posts/${postId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    dispatch(fetchPosts());
+  } catch (err) {
+    alert("No se pudo eliminar el post.");
+  }
   };
 
   const handleLike = (postId) => {

@@ -1,6 +1,9 @@
 // client/src/axiosConfig.js
 import axios from "axios";
 
+// Verifica si la variable de entorno está bien leída
+console.log("👉 API URL:", process.env.REACT_APP_API_URL);
+
 const baseURL = process.env.REACT_APP_API_URL;
 
 if (!baseURL) {
