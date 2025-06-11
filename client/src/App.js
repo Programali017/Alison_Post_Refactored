@@ -56,6 +56,7 @@ function Navbar() {
 }
 
 function App() {
+  console.log("🚀 Build limpio");
   return (
     <Router>
       <Navbar />

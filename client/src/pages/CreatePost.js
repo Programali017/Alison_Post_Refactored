@@ -1,12 +1,14 @@
 // client/src/pages/CreatePost.js
 import React, { useState } from "react";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { createPost } from "../redux/slices/postSlice";
 import { useNavigate } from "react-router-dom";
 
 const CreatePost = () => {
   const [form, setForm] = useState({ title: "", content: "" });
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loading, error } = useSelector((state) => state.posts);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -14,27 +16,17 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("Debes iniciar sesión para crear un post.");
-      return;
-    }
-    try {
-      await axios.post(
-        "http://localhost:5000/api/posts",
-        { title: form.title, content: form.content },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+    const result = await dispatch(createPost(form));
+    if (createPost.fulfilled.match(result)) {
       navigate("/");
-    } catch (err) {
-      setError(err.response?.data?.error || "Error al crear el post.");
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-vinoTinto">Crear Nuevo Post</h2>
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow-lg">
+      <h2 className="text-2xl font-bold mb-4 text-vinoTinto">Crear nuevo post</h2>
       {error && <p className="text-red-500 mb-2">{error}</p>}
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
@@ -51,13 +43,14 @@ const CreatePost = () => {
           onChange={handleChange}
           placeholder="Contenido"
           required
-          className="w-full border px-3 py-2 rounded h-32"
+          className="w-full border px-3 py-2 rounded"
         />
         <button
           type="submit"
+          disabled={loading}
           className="w-full bg-vinoTinto text-white px-4 py-2 rounded hover:bg-black"
         >
-          Publicar
+          {loading ? "Publicando..." : "Publicar"}
         </button>
       </form>
     </div>
