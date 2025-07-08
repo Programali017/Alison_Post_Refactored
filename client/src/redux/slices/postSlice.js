@@ -138,12 +138,6 @@ const postSlice = createSlice({
         if (idx !== -1) state.posts[idx] = action.payload;
       })
 
-      // sharePost
-      .addCase(sharePost.fulfilled, (state, action) => {
-        const idx = state.posts.findIndex((p) => p._id === action.payload._id);
-        if (idx !== -1) state.posts[idx] = action.payload;
-      })
-
       // commentPost
       .addCase(commentPost.fulfilled, (state, action) => {
         const idx = state.posts.findIndex((p) => p._id === action.payload._id);
