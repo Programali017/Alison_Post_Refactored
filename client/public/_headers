@@ -1,2 +1,2 @@
 /*
-  Content-Security-Policy: img-src 'self' data: https:;
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: https:;
