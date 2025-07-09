@@ -1,2 +1,5 @@
 /*
-  Content-Security-Policy: default-src 'self'; img-src 'self' data: https:;
+  Content-Security-Policy:
+    default-src 'self';
+    img-src 'self' data: https:;
+    connect-src 'self' https://alison-post-refactored.onrender.com;
