@@ -60,8 +60,7 @@ router.get("/google/callback", passport.authenticate("google", {
   });
 
   // 🔁 Redirigir al frontend con el token
-  const redirectUrl = `https://alisonpost.netlify.app/login?token=${token}`;
-  res.redirect(redirectUrl);
+  res.redirect(`https://alisonpost.netlify.app/google-success?token=${token}`);
 });
 
 module.exports = router;

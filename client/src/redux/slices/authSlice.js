@@ -31,6 +31,20 @@ export const login = createAsyncThunk(
   }
 );
 
+// LOGIN CON GOOGLE
+export const loginWithGoogle = createAsyncThunk(
+  "auth/google",
+  async (googleToken, thunkAPI) => {
+    try {
+      const res = await api.post("/auth/google/token", { token: googleToken });
+      localStorage.setItem("token", res.data.token);
+      return res.data; // { token, user }
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data?.error || err.message);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -46,7 +60,6 @@ const authSlice = createSlice({
       state.token = null;
       localStorage.removeItem("token");
     },
-    // ✅ Nuevo reducer para limpiar estado de registro
     clearRegisterStatus: (state) => {
       state.registerSuccess = null;
       state.error = null;
@@ -81,10 +94,23 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      // LOGIN CON GOOGLE
+      .addCase(loginWithGoogle.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginWithGoogle.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+      })
+      .addCase(loginWithGoogle.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-// ✅ Exporta el nuevo action creator
 export const { logout, clearRegisterStatus } = authSlice.actions;
 export default authSlice.reducer;
