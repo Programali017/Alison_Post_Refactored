@@ -4,8 +4,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const User = require("./models/User");
 const path = require("path");
+
+const User = require("./models/User");
 
 const app = express();
 
@@ -15,10 +16,12 @@ app.use(cors({
   credentials: true,
 }));
 
-// ✅ Headers manuales para seguridad
+// ✅ Headers manuales extra (por seguridad y compatibilidad)
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "https://alisonpost.netlify.app");
   res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   next();
 });
 
@@ -27,7 +30,7 @@ app.use(express.json());
 // ✅ Inicializar Passport
 app.use(passport.initialize());
 
-// ✅ Configuración de estrategia Google
+// ✅ Configurar Google OAuth
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -35,6 +38,7 @@ passport.use(new GoogleStrategy({
 }, async (accessToken, refreshToken, profile, done) => {
   try {
     let user = await User.findOne({ googleId: profile.id });
+
     if (!user) {
       user = await User.create({
         googleId: profile.id,
@@ -42,27 +46,31 @@ passport.use(new GoogleStrategy({
         username: profile.displayName,
       });
     }
+
     return done(null, user);
   } catch (err) {
+    console.error("❌ Error en estrategia OAuth:", err);
     return done(err, null);
   }
 }));
 
-// ✅ Rutas
+// ✅ Rutas principales
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/posts", require("./routes/posts"));
 
-// ✅ Ruta raíz (para verificar que el backend funciona)
+// ✅ Ruta de prueba
 app.get("/api", (req, res) => {
-  res.send("✅ API de Alison funcionando");
+  res.send("✅ API de Alison funcionando correctamente 🎉");
 });
 
-// ✅ Producción: servir React si está compilado (opcional)
-app.use(express.static(path.join(__dirname, "../client/build")));
+// ✅ Sirve el front de React en producción
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client/build")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
-});
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+  });
+}
 
 // ✅ Conectar a MongoDB
 mongoose.connect(process.env.MONGO_URI, {
@@ -79,5 +87,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
-
-
