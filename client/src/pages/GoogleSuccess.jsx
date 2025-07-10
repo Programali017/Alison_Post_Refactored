@@ -9,6 +9,7 @@ const GoogleSuccess = () => {
   const location = useLocation();
 
   useEffect(() => {
+    console.log("Mounted GoogleSuccess")
     const params = new URLSearchParams(location.search);
     const token = params.get("token");
 
