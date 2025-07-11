@@ -31,19 +31,24 @@ export const login = createAsyncThunk(
   }
 );
 
-// LOGIN CON GOOGLE
-export const loginWithGoogle = createAsyncThunk(
-  "auth/google",
-  async (googleToken, thunkAPI) => {
+// LOGIN CON GOOGLE TOKEN
+export const loginWithGoogleToken = createAsyncThunk(
+  "auth/loginWithGoogleToken",
+  async (token, thunkAPI) => {
     try {
-      const res = await api.post("/auth/google/token", { token: googleToken });
-      localStorage.setItem("token", res.data.token);
-      return res.data; // { token, user }
+      // ⚠️ OJO: ya tenemos el token, así que lo enviamos como Authorization
+      const res = await api.get("/auth/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return { user: res.data, token };
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data?.error || err.message);
     }
   }
 );
+
 
 const authSlice = createSlice({
   name: "auth",
