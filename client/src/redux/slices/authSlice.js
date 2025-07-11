@@ -4,7 +4,7 @@ import api from "../../axiosConfig";
 
 const initialToken = localStorage.getItem("token") || null;
 
-// REGISTER
+// ✅ REGISTER
 export const register = createAsyncThunk(
   "auth/register",
   async ({ email, password }, thunkAPI) => {
@@ -17,7 +17,7 @@ export const register = createAsyncThunk(
   }
 );
 
-// LOGIN
+// ✅ LOGIN
 export const login = createAsyncThunk(
   "auth/login",
   async ({ email, password }, thunkAPI) => {
@@ -31,12 +31,11 @@ export const login = createAsyncThunk(
   }
 );
 
-// LOGIN CON GOOGLE TOKEN
-export const loginWithGoogleToken = createAsyncThunk(
-  "auth/loginWithGoogleToken",
+// ✅ LOGIN CON GOOGLE
+export const loginWithGoogle = createAsyncThunk(
+  "auth/loginWithGoogle",
   async (token, thunkAPI) => {
     try {
-      // ⚠️ OJO: ya tenemos el token, así que lo enviamos como Authorization
       const res = await api.get("/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -48,7 +47,6 @@ export const loginWithGoogleToken = createAsyncThunk(
     }
   }
 );
-
 
 const authSlice = createSlice({
   name: "auth",
@@ -86,6 +84,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
       // LOGIN
       .addCase(login.pending, (state) => {
         state.loading = true;
@@ -100,17 +99,19 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // LOGIN CON GOOGLE
-      .addCase(loginWithGoogle.pending, (state) => {
+
+      // ✅ LOGIN CON GOOGLE TOKEN
+      .addCase(loginWithGoogleToken.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(loginWithGoogle.fulfilled, (state, action) => {
+      .addCase(loginWithGoogleToken.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
+        localStorage.setItem("token", action.payload.token);
       })
-      .addCase(loginWithGoogle.rejected, (state, action) => {
+      .addCase(loginWithGoogleToken.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
@@ -119,3 +120,4 @@ const authSlice = createSlice({
 
 export const { logout, clearRegisterStatus } = authSlice.actions;
 export default authSlice.reducer;
+

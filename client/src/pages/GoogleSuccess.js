@@ -16,11 +16,15 @@ const GoogleSuccess = () => {
       // Guardar token en localStorage
       localStorage.setItem("token", token);
 
-      // ⚡ Despachar acción para almacenar token y recuperar user
-      dispatch(loginWithGoogleToken(token));
-
-      // Redirigir al home o dashboard
-      navigate("/");
+      // ⚡ Despachar acción y esperar a que se resuelva correctamente
+      dispatch(loginWithGoogleToken(token))
+        .unwrap()
+        .then(() => {
+          navigate("/"); // o "/dashboard" si prefieres
+        })
+        .catch(() => {
+          navigate("/login");
+        });
     } else {
       navigate("/login");
     }
