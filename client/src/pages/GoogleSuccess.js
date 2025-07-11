@@ -16,13 +16,15 @@ const GoogleSuccess = () => {
       // Guardar token en localStorage
       localStorage.setItem("token", token);
 
-      // ⚡ Despachar acción y esperar a que se resuelva correctamente
+      // ⚡ Despachar acción y esperar resolución
       dispatch(loginWithGoogleToken(token))
         .unwrap()
         .then(() => {
-          navigate("/"); // o "/dashboard" si prefieres
+          navigate("/"); // Puedes cambiar por /dashboard si tienes uno
         })
-        .catch(() => {
+        .catch((err) => {
+          console.error("❌ Error al iniciar sesión con Google:", err);
+          localStorage.removeItem("token");
           navigate("/login");
         });
     } else {

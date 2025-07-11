@@ -31,9 +31,9 @@ export const login = createAsyncThunk(
   }
 );
 
-// ✅ LOGIN CON GOOGLE
-export const loginWithGoogle = createAsyncThunk(
-  "auth/loginWithGoogle",
+// ✅ LOGIN CON GOOGLE TOKEN (DESDE /google-success)
+export const loginWithGoogleToken = createAsyncThunk(
+  "auth/loginWithGoogleToken",
   async (token, thunkAPI) => {
     try {
       const res = await api.get("/auth/me", {
@@ -70,7 +70,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // REGISTER
+      // ✅ REGISTER
       .addCase(register.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -85,7 +85,7 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
 
-      // LOGIN
+      // ✅ LOGIN
       .addCase(login.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -120,4 +120,3 @@ const authSlice = createSlice({
 
 export const { logout, clearRegisterStatus } = authSlice.actions;
 export default authSlice.reducer;
-

@@ -11,6 +11,8 @@ import Register from "./pages/Register";
 import CreatePost from "./pages/CreatePost";
 import EditPost from "./pages/EditPost";
 import SinglePost from "./pages/SinglePost";
+import OauthCallback from './pages/OauthCallback';
+import GoogleSuccess from './pages/GoogleSuccess'; 
 
 function Navbar() {
   const dispatch = useDispatch();
@@ -68,6 +70,8 @@ function App() {
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/edit-post/:id" element={<EditPost />} />
         <Route path="/post/:id" element={<SinglePost />} />
+        <Route path="/oauth-callback" element={<OauthCallback />} />
+        <Route path="/google-success" element={<GoogleSuccess />} /> {/* ✅ Nueva ruta */}
       </Routes>
     </Router>
   );
