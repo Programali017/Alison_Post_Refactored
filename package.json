@@ -1,10 +1,9 @@
 {
-  "name": "alison-post-api",
+  "name": "alison-post",
   "version": "1.0.0",
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
-    "dev": "nodemon server/index.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "dependencies": {
