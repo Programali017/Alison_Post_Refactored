@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken"); // ✅ Solo una vez
 const passport = require("passport");
 const User = require("../models/User");
 
@@ -63,11 +63,7 @@ router.get("/google/callback", passport.authenticate("google", {
   res.redirect(`https://alisonpost.netlify.app/google-success?token=${token}`);
 });
 
-module.exports = router;
-
-const jwt = require("jsonwebtoken");
-
-// 📌 Endpoint para obtener datos del usuario desde el token
+// ✅ Endpoint para obtener datos del usuario desde el token
 router.get("/me", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
@@ -85,3 +81,4 @@ router.get("/me", async (req, res) => {
   }
 });
 
+module.exports = router;
