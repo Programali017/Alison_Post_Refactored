@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const path = require("path");
 
 const User = require("./models/User");
 
@@ -12,7 +11,7 @@ const app = express();
 
 // ✅ CORS para Netlify
 app.use(cors({
-  origin: "https://alisonpost.netlify.app", // O usa process.env.FRONTEND_URL
+  origin: "https://alisonpost.netlify.app", // Puedes usar process.env.FRONTEND_URL si prefieres
   credentials: true,
 }));
 
@@ -58,16 +57,9 @@ passport.use(new GoogleStrategy({
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/posts", require("./routes/posts"));
 
-// ✅ Ruta de prueba para asegurar que el backend funciona
+// ✅ Ruta de prueba
 app.get("/api", (req, res) => {
   res.send("✅ API de Alison funcionando correctamente 🎉");
-});
-
-// ✅ Producción: servir React desde /client/build
-app.use(express.static(path.join(__dirname, "../client/build")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 
 // ✅ Conectar a MongoDB
